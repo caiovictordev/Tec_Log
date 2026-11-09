@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import conect from "./config/database.js";
 import setorRoutes from "./routes/setorRoutes.js";
+import materialRoutes from "./routes/materialRoutes.js";
 
 const app = express();
 
@@ -12,28 +13,9 @@ app.use(express.json());
 
 // Rotas
 app.use("/api/setores", setorRoutes);
+app.use("/api/materiais", materialRoutes);
 
-// Rota de teste/saúde da API
-app.get("/api/health", async (req, res) => {
-    try {
-        const [rows] = await conect.query("SELECT DATABASE() AS banco");
-
-        return res.status(200).json({
-            status: "UP",
-            message: "API funcionando!",
-            database: rows[0].banco
-        });
-    } catch (error) {
-        console.error("Erro na rota de health check:", error);
-        return res.status(500).json({
-            status: "DOWN",
-            message: "Erro ao conectar com o banco de dados."
-        });
-    }
-});
-
-// Definição da porta com fallback seguro
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 async function startServer() {
     try {
