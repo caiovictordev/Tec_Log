@@ -5,6 +5,7 @@ import conect from "./config/database.js";
 import setorRoutes from "./routes/setorRoutes.js";
 import materialRoutes from "./routes/materialRoutes.js";
 import maquinaRoutes from "./routes/maquinaRoutes.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/setores", setorRoutes);
 app.use("/api/materiais", materialRoutes);
 app.use("/api/maquinas", maquinaRoutes);
+app.use("/api/usuarios", usuarioRoutes);
 
 const PORT = process.env.PORT;
 
