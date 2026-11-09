@@ -4,6 +4,7 @@ import cors from "cors";
 import conect from "./config/database.js";
 import setorRoutes from "./routes/setorRoutes.js";
 import materialRoutes from "./routes/materialRoutes.js";
+import maquinaRoutes from "./routes/maquinaRoutes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 // Rotas
 app.use("/api/setores", setorRoutes);
 app.use("/api/materiais", materialRoutes);
+app.use("/api/maquinas", maquinaRoutes);
 
 const PORT = process.env.PORT;
 
