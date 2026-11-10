@@ -42,9 +42,10 @@ function ListaOcorrencias() {
 
         carregarOcorrencias();
     }, [navigate]);
+
     const ocorrenciasFiltradas = ocorrencias.filter((item) => {
         const correspondeSetor =
-            !filtroSetor || item.setor_nome === filtroSetor;
+            !filtroSetor || item.setor === filtroSetor;
 
         const correspondeTipo =
             !filtroTipo || item.tipo === filtroTipo;
@@ -55,7 +56,8 @@ function ListaOcorrencias() {
             !termo ||
             item.material?.toLowerCase().includes(termo) ||
             item.maquina?.toLowerCase().includes(termo) ||
-            item.usuario?.toLowerCase().includes(termo);
+            item.usuario?.toLowerCase().includes(termo) ||
+            item.setor?.toLowerCase().includes(termo);
 
         return (
             correspondeSetor &&
@@ -63,6 +65,15 @@ function ListaOcorrencias() {
             correspondePesquisa
         );
     });
+
+    const nomesTipos = {
+    sucata: "Sucata",
+    retrabalho: "Retrabalho",
+    perda_materia_prima: "Perda de matéria-prima",
+    embalagem: "Embalagem",
+    outro: "Outro"
+};
+
 
     return (
         <main className="lista-ocorrencias">
@@ -90,7 +101,7 @@ function ListaOcorrencias() {
                 >
                     <option value="">Todos os setores</option>
 
-                    {[...new Set(ocorrencias.map((item) => item.setor_nome))]
+                    {[...new Set(ocorrencias.map((item) => item.setor))]
                         .filter(Boolean)
                         .map((setor) => (
                             <option key={setor} value={setor}>
@@ -130,7 +141,7 @@ function ListaOcorrencias() {
                 <p>Nenhuma ocorrência cadastrada.</p>
             ) : (
                 <>
-                    <p>
+                    <p className="lista-contagem">
                         Exibindo {ocorrenciasFiltradas.length} de {ocorrencias.length} ocorrências.
                     </p>
 
@@ -157,11 +168,15 @@ function ListaOcorrencias() {
                                         <td>{item.setor}</td>
                                         <td>{item.maquina || "Não informado"}</td>
                                         <td>{item.material || "Não informado"}</td>
-                                        <td>{item.tipo}</td>
+                                        <td>
+                                            <span className={`tipo-badge tipo-${item.tipo}`}>
+                                                {nomesTipos[item.tipo] || "Outro"}
+                                            </span>
+                                        </td>
                                         <td>
                                             {item.quantidade} {item.unidade_medida}
                                         </td>
-                                        <td>{item.usuario_nome}</td>
+                                        <td>{item.usuario || "Não informado"}</td>
                                     </tr>
                                 ))}
                             </tbody>

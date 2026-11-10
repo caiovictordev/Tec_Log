@@ -1,0 +1,150 @@
+
+/* Botão hambúrguer */
+
+.menu-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 120;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+
+    background: var(--bg-primary);
+    color: var(--primary-dark);
+
+    font-size: 23px;
+    cursor: pointer;
+
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.menu-toggle:hover {
+    background: var(--primary-light);
+}
+
+/* Fundo escurecido */
+
+.navbar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+}
+
+/* Menu lateral */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    width: 260px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 85px 18px 28px;
+
+    background: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.navbar.navbar-open {
+    transform: translateX(0);
+}
+
+/* Logo */
+
+.navbar-logo {
+    padding: 0 10px 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-logo h2 {
+    font-size: 19px;
+    color: var(--primary-dark);
+}
+
+.navbar-logo span {
+    display: block;
+    margin-top: 6px;
+
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* Links */
+
+.navbar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-top: 30px;
+}
+
+.navbar-links a {
+    padding: 13px 14px;
+
+    border-radius: var(--radius-sm);
+
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+
+    transition: var(--transition);
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.navbar-links a.active {
+    font-weight: 600;
+}
+
+/* Rodapé */
+
+.navbar-footer {
+    margin-top: auto;
+}
+
+.navbar-footer button {
+    width: 100%;
+    padding: 13px;
+
+    border: none;
+    border-radius: var(--radius-sm);
+
+    background: var(--primary-light);
+    color: var(--primary-dark);
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.navbar-footer button:hover {
+    background: var(--primary);
+    color: white;
+}

@@ -1,7 +1,7 @@
 
 .lista-ocorrencias {
     min-height: 100vh;
-    padding: 40px;
+    padding: 65px 70px 40px;
     background: var(--bg-secondary);
     color: var(--text-primary);
 }
@@ -154,5 +154,95 @@
 
     .filtros {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Contagem de registros */
+
+.lista-contagem {
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Identificação dos tipos */
+
+.tipo-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tipo-sucata {
+    background: #eeedfe;
+    color: #3c3489;
+}
+
+.tipo-retrabalho {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.tipo-perda_materia_prima {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.tipo-embalagem {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.tipo-outro {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+/* Melhorias na tabela */
+
+.tabela-container {
+    margin-top: 5px;
+}
+
+.tabela-container th {
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.tabela-container td {
+    vertical-align: middle;
+}
+
+.tabela-container tbody tr:hover td {
+    color: var(--primary-dark);
+}
+
+/* Botões e filtros */
+
+.filtros button:active,
+.lista-header button:active {
+    transform: scale(0.98);
+}
+
+/* Responsividade */
+
+@media (max-width: 600px) {
+    .lista-header button {
+        width: 100%;
+    }
+
+    .lista-header h1 {
+        font-size: 23px;
+    }
+
+    .filtros {
+        padding: 16px;
+    }
+
+    .tabela-container table {
+        min-width: 850px;
     }
 }
