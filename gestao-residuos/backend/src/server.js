@@ -6,6 +6,7 @@ import setorRoutes from "./routes/setorRoutes.js";
 import materialRoutes from "./routes/materialRoutes.js";
 import maquinaRoutes from "./routes/maquinaRoutes.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
+import ocorrenciaRoutes from "./routes/ocorrenciaRoutes.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api/setores", setorRoutes);
 app.use("/api/materiais", materialRoutes);
 app.use("/api/maquinas", maquinaRoutes);
 app.use("/api/usuarios", usuarioRoutes);
+app.use("/api/ocorrencias", ocorrenciaRoutes);
 
 const PORT = process.env.PORT;
 
