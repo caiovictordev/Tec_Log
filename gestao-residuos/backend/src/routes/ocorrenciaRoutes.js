@@ -6,6 +6,8 @@ import autenticar from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/alertas", autenticar, OcorrenciaController.listarAlertas);
+
 router.get("/", autenticar, OcorrenciaController.listar);
 router.post("/", autenticar, OcorrenciaController.cadastrar);
 

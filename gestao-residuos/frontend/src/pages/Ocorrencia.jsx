@@ -23,11 +23,14 @@ function Ocorrencia() {
         processo: "",
         tipo: "sucata",
         quantidade: "",
-        unidade_medida: "kg",
+        unidade_medida: "g",
         custo_estimado: "",
         destino: "nao_informado",
         observacao: ""
     });
+    const quantidadeEmKg =
+        formulario.unidade_medida === "g" && formulario.quantidade ? Number(formulario.quantidade) / 1000 : null;
+
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -230,11 +233,23 @@ function Ocorrencia() {
                                 required
                             />
                         </div>
+                        {quantidadeEmKg !== null && (
+                            <p className="conversao-quantidade">
+                                Equivalente a: <strong>
+                                    {quantidadeEmKg.toLocaleString("pt-BR", {
+                                        maximumFractionDigits: 4
+                                    })} kg
+                                </strong>
+                            </p>
+                        )}
 
                         <div className="form-group">
                             <label>Unidade de medida</label>
-                            <select name="unidade_medida" value={formulario.unidade_medida} onChange={handleChange}>
-                                <option value="kg">Quilograma (kg)</option>
+                            <select
+                                name="unidade_medida"
+                                value={formulario.unidade_medida}
+                                onChange={handleChange}
+                            >
                                 <option value="g">Grama (g)</option>
                                 <option value="un">Unidade (un)</option>
                                 <option value="L">Litro (L)</option>
@@ -293,6 +308,7 @@ function Ocorrencia() {
                     {carregando ? "Carregando dados..." : enviando ? "Registrando..." : "Registrar ocorrência"}
                 </button>
             </form>
+            
         </main>
     );
 

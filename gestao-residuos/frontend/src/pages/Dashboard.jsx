@@ -30,6 +30,7 @@ function Dashboard() {
 
     const [ocorrencias, setOcorrencias] = useState([]);
     const [carregando, setCarregando] = useState(true);
+    const [alertas, setAlertas] = useState([]);
 
     useEffect(() => {
         async function carregarDados() {
@@ -51,15 +52,18 @@ function Dashboard() {
                     resOcorrencias,
                     resSetores,
                     resMaquinas,
-                    resMateriais
+                    resMateriais,
+                    resAlertas
                 ] = await Promise.all([
                     api.get("/ocorrencias", config),
                     api.get("/setores"),
                     api.get("/maquinas"),
-                    api.get("/materiais")
+                    api.get("/materiais"),
+                    api.get("/ocorrencias/alertas", config)
                 ]);
 
                 setOcorrencias(resOcorrencias.data);
+                setAlertas(resAlertas.data);
 
                 setDados({
                     ocorrencias: resOcorrencias.data.length,
@@ -78,15 +82,30 @@ function Dashboard() {
         carregarDados();
     }, [navigate]);
 
-    // Agrupar quantidades por unidade de medida
-    const quantidadesPorUnidade = ocorrencias.reduce((acumulador, item) => {
-    const unidade = item.unidade_medida || "Não informada";
-    const quantidade = Number(item.quantidade) || 0;
+// Calcular a quantidade total de resíduos
+const resumoQuantidades = ocorrencias.reduce(
+    (acumulador, item) => {
+        const quantidade = Number(item.quantidade) || 0;
+        const unidade = item.unidade_medida;
 
-    acumulador[unidade] = (acumulador[unidade] || 0) + quantidade;
+        if (unidade === "kg") {
+            acumulador.totalGramas += quantidade * 1000;
+        } else if (unidade === "g") {
+            acumulador.totalGramas += quantidade;
+        } else {
+            acumulador.outrasUnidades[unidade] =
+                (acumulador.outrasUnidades[unidade] || 0) + quantidade;
+        }
 
-    return acumulador;
-    }, {});
+        return acumulador;
+    },
+    {
+        totalGramas: 0,
+        outrasUnidades: {}
+    }
+);
+
+const totalKg = resumoQuantidades.totalGramas / 1000;
 
     // Contar ocorrências por setor
     const ocorrenciasPorSetor = ocorrencias.reduce((acumulador, item) => {
@@ -144,6 +163,49 @@ function Dashboard() {
                 <p className="dashboard-loading">Carregando indicadores...</p>
             ) : (
                 <>
+                    <section className="dashboard-alertas">
+                        <div className="dashboard-alertas-header">
+                            <div>
+                                <h2>Alertas estatísticos</h2>
+                                <p>
+                                    Ocorrências identificadas acima do padrão histórico.
+                                </p>
+                            </div>
+
+                            <span>{alertas.length} alerta(s)</span>
+                        </div>
+
+                        {alertas.length === 0 ? (
+                            <p>Nenhum alerta identificado.</p>
+                        ) : (
+                            <div className="alertas-lista">
+                                {alertas.map((alerta) => (
+                                    <article className="alerta-item" key={alerta.id}>
+                                        <div>
+                                            <strong>{alerta.setor}</strong>
+                                            <span>{alerta.material || "Material não informado"}</span>
+                                        </div>
+
+                                        <p>{alerta.descricao}</p>
+
+                                        <div className="alerta-detalhes">
+                                            <span>
+                                                Observado: {Number(alerta.valor_observado).toLocaleString("pt-BR")}
+                                            </span>
+
+                                            <span>
+                                                Referência: {Number(alerta.valor_referencia).toLocaleString("pt-BR")}
+                                            </span>
+
+                                            <span className={`alerta-status ${alerta.status}`}>
+                                                {alerta.status}
+                                            </span>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        )}
+                    </section>
                     <section className="dashboard-stats">
                         {indicadores.map((item) => (
                             <article className="dashboard-card stat-card" key={item.titulo}>
@@ -157,11 +219,33 @@ function Dashboard() {
                         <article className="dashboard-card summary-card">
                             <h2>Quantidade de resíduos</h2>
 
-                            {Object.entries(quantidadesPorUnidade).length === 0 ? (
+                            {ocorrencias.length === 0 ? (
                                 <p>Nenhum registro disponível.</p>
                             ) : (
                                 <div className="summary-values">
-                                    {Object.entries(quantidadesPorUnidade).map(
+                                    {resumoQuantidades.totalGramas > 0 && (
+                                        <>
+                                            <div className="summary-value">
+                                                <strong>
+                                                    {totalKg.toLocaleString("pt-BR", {
+                                                        maximumFractionDigits: 4
+                                                    })}
+                                                </strong>
+                                                <span>kg</span>
+                                            </div>
+
+                                            <div className="summary-value">
+                                                <strong>
+                                                    {resumoQuantidades.totalGramas.toLocaleString("pt-BR", {
+                                                        maximumFractionDigits: 2
+                                                    })}
+                                                </strong>
+                                                <span>g</span>
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {Object.entries(resumoQuantidades.outrasUnidades).map(
                                         ([unidade, quantidade]) => (
                                             <div className="summary-value" key={unidade}>
                                                 <strong>

@@ -13,6 +13,7 @@ function ListaOcorrencias() {
     const [ocorrencias, setOcorrencias] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [mensagem, setMensagem] = useState("");
+    const [ocorrenciaSelecionada, setOcorrenciaSelecionada] = useState(null);
 
     useEffect(() => {
         async function carregarOcorrencias() {
@@ -156,6 +157,7 @@ function ListaOcorrencias() {
                                     <th>Tipo</th>
                                     <th>Quantidade</th>
                                     <th>Operador</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
 
@@ -177,11 +179,127 @@ function ListaOcorrencias() {
                                             {item.quantidade} {item.unidade_medida}
                                         </td>
                                         <td>{item.usuario || "Não informado"}</td>
+                                        <td>
+                                            <button
+                                                className="btn-detalhes"
+                                                onClick={() => setOcorrenciaSelecionada(item)}
+                                            >
+                                                Ver detalhes
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
+                    {ocorrenciaSelecionada && (
+                        <div
+                            className="modal-overlay"
+                            onClick={() => setOcorrenciaSelecionada(null)}
+                        >
+                            <section
+                                className="modal-detalhes"
+                                onClick={(event) => event.stopPropagation()}
+                            >
+                                <header className="modal-header">
+                                    <div>
+                                        <h2>Detalhes da ocorrência</h2>
+                                        <p>Registro #{ocorrenciaSelecionada.id}</p>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setOcorrenciaSelecionada(null)}
+                                        aria-label="Fechar detalhes"
+                                    >
+                                        ✕
+                                    </button>
+                                </header>
+
+                                <div className="modal-conteudo">
+                                    <div>
+                                        <span>Data e horário</span>
+                                        <strong>
+                                            {new Date(
+                                                ocorrenciaSelecionada.data_ocorrencia
+                                            ).toLocaleString("pt-BR")}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Setor</span>
+                                        <strong>{ocorrenciaSelecionada.setor || "Não informado"}</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Máquina</span>
+                                        <strong>{ocorrenciaSelecionada.maquina || "Não informado"}</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Material</span>
+                                        <strong>{ocorrenciaSelecionada.material || "Não informado"}</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Processo</span>
+                                        <strong>{ocorrenciaSelecionada.processo || "Não informado"}</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Tipo</span>
+                                        <strong>
+                                            {nomesTipos[ocorrenciaSelecionada.tipo] || "Outro"}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Quantidade</span>
+                                        <strong>
+                                            {ocorrenciaSelecionada.quantidade}{" "}
+                                            {ocorrenciaSelecionada.unidade_medida}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Custo estimado</span>
+                                        <strong>
+                                            {ocorrenciaSelecionada.custo_estimado != null
+                                                ? Number(ocorrenciaSelecionada.custo_estimado).toLocaleString("pt-BR", {
+                                                    style: "currency",
+                                                    currency: "BRL"
+                                                })
+                                                : "Não informado"}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Destino</span>
+                                        <strong>
+                                            {{
+                                                reutilizacao: "Reutilização",
+                                                reciclagem: "Reciclagem",
+                                                descarte: "Descarte",
+                                                nao_informado: "Não informado"
+                                            }[ocorrenciaSelecionada.destino] || "Não informado"}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Operador</span>
+                                        <strong>{ocorrenciaSelecionada.usuario || "Não informado"}</strong>
+                                    </div>
+
+                                    <div className="detalhe-observacao">
+                                        <span>Observações</span>
+                                        <p>
+                                            {ocorrenciaSelecionada.observacao || "Nenhuma observação registrada."}
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    )}
                 </>
 
             )}
