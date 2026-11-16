@@ -24,4 +24,29 @@ async function cadastrar(nome, descricao) {
     };
 }
 
-export default { listar, cadastrar };
+async function editar(id, nome, descricao) {
+    await conect.execute(
+        `UPDATE destinos_residuos
+         SET nome = ?, descricao = ?
+         WHERE id = ?`,
+        [nome, descricao, id]
+    );
+
+    return {
+        id,
+        nome,
+        descricao
+    };
+}
+
+async function excluir(id) {
+    const [dados] = await conect.execute(
+        `DELETE FROM destinos_residuos
+         WHERE id = ?`,
+        [id]
+    );
+
+    return dados.affectedRows > 0;
+}
+
+export default { listar, cadastrar, editar, excluir };
