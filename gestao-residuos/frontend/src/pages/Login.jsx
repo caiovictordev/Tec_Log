@@ -3,11 +3,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
+import "./Login.css";
+
 function Login() {
     const navigate = useNavigate();
 
+    const [aba, setAba] = useState("login");
+
+    const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [confirmarSenha, setConfirmarSenha] = useState("");
+
     const [mensagem, setMensagem] = useState("");
     const [carregando, setCarregando] = useState(false);
 
@@ -40,38 +47,167 @@ function Login() {
         setCarregando(false);
     }
 
+    async function handleCadastro(event) {
+        event.preventDefault();
+
+        setMensagem("");
+
+        if (senha !== confirmarSenha) {
+            setMensagem("As senhas não coincidem.");
+            return;
+        }
+
+        setCarregando(true);
+
+        try {
+            const resposta = await api.post("/usuarios", {
+                nome,
+                email,
+                senha
+            });
+
+            setMensagem(resposta.data.message);
+
+            setNome("");
+            setEmail("");
+            setSenha("");
+            setConfirmarSenha("");
+
+        } catch (error) {
+            setMensagem(
+                error.response?.data?.message ||
+                "Não foi possível cadastrar o usuário."
+            );
+        }
+
+        setCarregando(false);
+    }
+
+    function trocarAba(novaAba) {
+        setAba(novaAba);
+        setMensagem("");
+        setSenha("");
+        setConfirmarSenha("");
+    }
+
     return (
-        <main>
-            <h1>Gestão de Resíduos Industriais</h1>
-            <p>Entre com suas credenciais para continuar.</p>
+        <main className="auth-container">
+            <section className="auth-card">
 
-            <form onSubmit={handleLogin}>
-                <label htmlFor="email">E-mail</label>
-                <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="seuemail@exemplo.com"
-                    required
-                />
+                <header className="auth-header">
+                    <h1>Gestão de Resíduos Industriais</h1>
+                    <p>
+                        {aba === "login"
+                            ? "Entre com suas credenciais para continuar."
+                            : "Crie sua conta para acessar o sistema."}
+                    </p>
+                </header>
 
-                <label htmlFor="senha">Senha</label>
-                <input
-                    id="senha"
-                    type="password"
-                    value={senha}
-                    onChange={(event) => setSenha(event.target.value)}
-                    placeholder="Digite sua senha"
-                    required
-                />
+                <div className="auth-abas">
+                    <button
+                        type="button"
+                        className={aba === "login" ? "ativa" : ""}
+                        onClick={() => trocarAba("login")}
+                    >
+                        Entrar
+                    </button>
 
-                {mensagem && <p role="alert">{mensagem}</p>}
+                    <button
+                        type="button"
+                        className={aba === "cadastro" ? "ativa" : ""}
+                        onClick={() => trocarAba("cadastro")}
+                    >
+                        Cadastrar
+                    </button>
+                </div>
 
-                <button type="submit" disabled={carregando}>
-                    {carregando ? "Entrando..." : "Entrar"}
-                </button>
-            </form>
+                {aba === "login" ? (
+                    <form onSubmit={handleLogin}>
+
+                        <label htmlFor="email">E-mail</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="seuemail@exemplo.com"
+                            required
+                        />
+
+                        <label htmlFor="senha">Senha</label>
+                        <input
+                            id="senha"
+                            type="password"
+                            value={senha}
+                            onChange={(event) => setSenha(event.target.value)}
+                            placeholder="Digite sua senha"
+                            required
+                        />
+
+                        {mensagem && <p role="alert">{mensagem}</p>}
+
+                        <button type="submit" disabled={carregando}>
+                            {carregando ? "Entrando..." : "Entrar"}
+                        </button>
+
+                    </form>
+                ) : (
+                    <form onSubmit={handleCadastro}>
+
+                        <label htmlFor="nome">Nome completo</label>
+                        <input
+                            id="nome"
+                            type="text"
+                            value={nome}
+                            onChange={(event) => setNome(event.target.value)}
+                            placeholder="Digite seu nome"
+                            required
+                        />
+
+                        <label htmlFor="email">E-mail</label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            placeholder="seuemail@exemplo.com"
+                            required
+                        />
+
+                        <label htmlFor="senha">Senha</label>
+                        <input
+                            id="senha"
+                            type="password"
+                            value={senha}
+                            onChange={(event) => setSenha(event.target.value)}
+                            placeholder="Crie uma senha"
+                            required
+                        />
+
+                        <label htmlFor="confirmarSenha">
+                            Confirmar senha
+                        </label>
+                        <input
+                            id="confirmarSenha"
+                            type="password"
+                            value={confirmarSenha}
+                            onChange={(event) =>
+                                setConfirmarSenha(event.target.value)
+                            }
+                            placeholder="Digite a senha novamente"
+                            required
+                        />
+
+                        {mensagem && <p role="alert">{mensagem}</p>}
+
+                        <button type="submit" disabled={carregando}>
+                            {carregando ? "Cadastrando..." : "Criar conta"}
+                        </button>
+
+                    </form>
+                )}
+
+            </section>
         </main>
     );
 }

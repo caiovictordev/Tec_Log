@@ -25,6 +25,15 @@ async function cadastrar(nome, descricao) {
 }
 
 async function editar(id, nome, descricao) {
+    const [existente] = await conect.execute(
+        "SELECT id FROM tipos_ocorrencia WHERE id = ?",
+        [id]
+    );
+
+    if (existente.length === 0) {
+        return false;
+    }
+
     await conect.execute(
         `UPDATE tipos_ocorrencia
          SET nome = ?, descricao = ?
@@ -32,11 +41,7 @@ async function editar(id, nome, descricao) {
         [nome, descricao, id]
     );
 
-    return {
-        id,
-        nome,
-        descricao
-    };
+    return true;
 }
 
 async function excluir(id) {

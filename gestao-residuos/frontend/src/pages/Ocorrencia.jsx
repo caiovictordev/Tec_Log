@@ -15,17 +15,20 @@ function Ocorrencia() {
 
     const [carregando, setCarregando] = useState(true);
 
+    const [tipos, setTipos] = useState([]);
+    const [destinos, setDestinos] = useState([]);
+
     const [formulario, setFormulario] = useState({
         setor_id: "",
         maquina_id: "",
         material_id: "",
         data_ocorrencia: "",
         processo: "",
-        tipo: "sucata",
+        tipo_id: "",
         quantidade: "",
         unidade_medida: "g",
         custo_estimado: "",
-        destino: "nao_informado",
+        destino_id: "",
         observacao: ""
     });
     const quantidadeEmKg =
@@ -41,19 +44,31 @@ function Ocorrencia() {
 
         const dados = {
             ...formulario,
+
             setor_id: Number(formulario.setor_id),
+
             maquina_id: formulario.maquina_id
                 ? Number(formulario.maquina_id)
                 : null,
+
             material_id: formulario.material_id
                 ? Number(formulario.material_id)
                 : null,
+
+            tipo_id: Number(formulario.tipo_id),
+
+            destino_id: Number(formulario.destino_id),
+
             data_ocorrencia: formulario.data_ocorrencia.replace("T", " ") + ":00",
+
             quantidade: Number(formulario.quantidade),
+
             custo_estimado: formulario.custo_estimado
                 ? Number(formulario.custo_estimado)
                 : null
         };
+
+        console.log("Dados enviados:", dados);
 
         try {
             await api.post("/ocorrencias", dados, {
@@ -70,11 +85,11 @@ function Ocorrencia() {
                 material_id: "",
                 data_ocorrencia: "",
                 processo: "",
-                tipo: "sucata",
+                tipo_id: "",
                 quantidade: "",
                 unidade_medida: "kg",
                 custo_estimado: "",
-                destino: "nao_informado",
+                destino_id: "",
                 observacao: ""
             });
 
@@ -100,16 +115,25 @@ function Ocorrencia() {
     useEffect(() => {
         async function carregarDados() {
             try {
-                const [resSetores, resMaquinas, resMateriais] =
-                    await Promise.all([
-                        api.get("/setores"),
-                        api.get("/maquinas"),
-                        api.get("/materiais")
-                    ]);
+                const [
+                    resSetores,
+                    resMaquinas,
+                    resMateriais,
+                    resTipos,
+                    resDestinos
+                ] = await Promise.all([
+                    api.get("/setores"),
+                    api.get("/maquinas"),
+                    api.get("/materiais"),
+                    api.get("/tipos-ocorrencia"),
+                    api.get("/destinos-residuos")
+                ]);
 
                 setSetores(resSetores.data);
                 setMaquinas(resMaquinas.data);
                 setMateriais(resMateriais.data);
+                setTipos(resTipos.data);
+                setDestinos(resDestinos.data);
 
             } catch (error) {
                 console.error("Erro ao carregar dados:", error);
@@ -192,16 +216,25 @@ function Ocorrencia() {
 
                         <div className="form-group">
                             <label>Tipo de ocorrência</label>
-                            <select name="tipo" value={formulario.tipo} onChange={handleChange} required>
-                                <option value="sucata">Sucata</option>
-                                <option value="retrabalho">Retrabalho</option>
-                                <option value="perda_materia_prima">Perda de matéria-prima</option>
-                                <option value="embalagem">Embalagem</option>
-                                <option value="outro">Outro</option>
+                            <select
+                                name="tipo_id"
+                                value={formulario.tipo_id}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Selecione o tipo</option>
+
+                                {tipos.map((tipo) => (
+                                    <option key={tipo.id} value={tipo.id}>
+                                        {tipo.nome}
+                                    </option>
+                                ))}
                             </select>
+    
                         </div>
                     </div>
                 </section>
+                
 
                 <section className="form-section">
                     <h2>Material e quantidade</h2>
@@ -278,11 +311,20 @@ function Ocorrencia() {
 
                     <div className="form-group">
                         <label>Destino do resíduo</label>
-                        <select name="destino" value={formulario.destino} onChange={handleChange}>
-                            <option value="nao_informado">Não informado</option>
-                            <option value="reutilizacao">Reutilização</option>
-                            <option value="reciclagem">Reciclagem</option>
-                            <option value="descarte">Descarte</option>
+
+                        <select
+                            name="destino_id"
+                            value={formulario.destino_id}
+                            onChange={handleChange}
+                            required
+                        >
+                            <option value="">Selecione o destino</option>
+
+                            {destinos.map((destino) => (
+                                <option key={destino.id} value={destino.id}>
+                                    {destino.nome}
+                                </option>
+                            ))}
                         </select>
                     </div>
 

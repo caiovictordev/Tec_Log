@@ -7,6 +7,9 @@ function Navbar() {
     const navigate = useNavigate();
     const [menuAberto, setMenuAberto] = useState(false);
 
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+    const isAdmin = usuario.perfil === "admin";
+
     function handleLogout() {
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
@@ -55,6 +58,18 @@ function Navbar() {
                     <NavLink to="/ocorrencias/nova" onClick={fecharMenu}>
                         Nova ocorrência
                     </NavLink>
+
+                    {isAdmin && (
+                        <>
+                            <NavLink to="/cadastros" onClick={fecharMenu}>
+                                Cadastros
+                            </NavLink>
+
+                            <NavLink to="/usuarios" onClick={fecharMenu}>
+                                Gerenciar usuários
+                            </NavLink>
+                        </>
+                    )}
                 </nav>
 
                 <div className="navbar-footer">

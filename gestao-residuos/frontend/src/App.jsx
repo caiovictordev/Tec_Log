@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Ocorrencia from "./pages/Ocorrencia";
 import ListaOcorrencias from "./pages/ListaOcorrencias";
+import Cadastros from "./pages/Cadastros";
+import Usuarios from "./pages/Usuarios";
 
 import Navbar from "./components/Navbar";
 
@@ -23,8 +25,28 @@ function Layout() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/ocorrencias" element={<ListaOcorrencias />} />
                     <Route path="/ocorrencias/nova" element={<Ocorrencia />} />
+
+                    <Route
+                        path="/cadastros"
+                        element={
+                            JSON.parse(localStorage.getItem("usuario") || "{}").perfil === "admin"
+                                ? <Cadastros />
+                                : <Navigate to="/dashboard" replace />
+                        }
+                    />
+                    <Route
+                        path="/usuarios"
+                        element={
+                            JSON.parse(localStorage.getItem("usuario") || "{}").perfil === "admin"
+                                ? <Usuarios />
+                                : <Navigate to="/dashboard" replace />
+                        }
+                    />
+
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
+
+
             </div>
         </div>
     );

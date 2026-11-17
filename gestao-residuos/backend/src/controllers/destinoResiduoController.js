@@ -70,15 +70,20 @@ class DestinoResiduoController {
                 });
             }
 
-            const destino = await DestinoResiduoModel.editar(
+            const atualizado = await DestinoResiduoModel.editar(
                 id,
                 nome.trim(),
                 descricao?.trim() || null
             );
 
+            if (!atualizado) {
+                return res.status(404).json({
+                    message: "Destino não encontrado."
+                });
+            }
+
             return res.status(200).json({
-                message: "Destino atualizado com sucesso!",
-                destino
+                message: "Destino atualizado com sucesso!"
             });
 
         } catch (error) {

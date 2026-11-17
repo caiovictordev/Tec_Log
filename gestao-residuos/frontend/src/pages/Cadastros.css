@@ -1,0 +1,259 @@
+.cadastros-container {
+    min-height: 100vh;
+    padding: 65px 70px 40px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.cadastros-header {
+    margin-bottom: 28px;
+}
+
+.cadastros-header h1 {
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.cadastros-header p {
+    color: var(--text-secondary);
+}
+
+.cadastros-abas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 24px;
+}
+
+.cadastros-abas .aba {
+    padding: 12px 18px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+.cadastros-abas .aba:hover {
+    color: var(--primary-hover);
+}
+
+.cadastros-abas .aba.ativa {
+    color: var(--primary-dark);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+.cadastros-conteudo {
+    padding: 24px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.cadastros-conteudo h2 {
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.cadastros-conteudo p {
+    color: var(--text-secondary);
+}
+
+/* Formulários */
+.cadastros-conteudo form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 600px;
+    margin: 24px 0 32px;
+}
+
+.cadastros-conteudo label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cadastros-conteudo input,
+.cadastros-conteudo select,
+.cadastros-conteudo textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.cadastros-conteudo input:focus,
+.cadastros-conteudo select:focus,
+.cadastros-conteudo textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.cadastros-conteudo textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.cadastros-conteudo form button {
+    align-self: flex-start;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cadastros-conteudo form button:hover {
+    background: var(--primary-hover);
+}
+
+/* Listagem de cadastros */
+.lista-setores {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.setor-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.setor-item:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.setor-item>div {
+    flex: 1;
+}
+
+.setor-item h3 {
+    margin-bottom: 5px;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.setor-item p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.setor-item button {
+    padding: 9px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.setor-item button:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.setor-item .btn-excluir {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.setor-item .btn-excluir:hover {
+    background: #dc2626;
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .cadastros-container {
+        padding: 16px;
+    }
+
+    .cadastros-abas {
+        gap: 4px;
+    }
+
+    .cadastros-abas .aba {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .cadastros-conteudo {
+        padding: 18px;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .cadastros-container {
+        padding: 30px 20px;
+    }
+
+    .cadastros-conteudo {
+        padding: 18px;
+    }
+
+    .cadastros-abas {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 5px;
+    }
+
+    .cadastros-abas .aba {
+        white-space: nowrap;
+    }
+
+    .setor-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .setor-item button {
+        width: 100%;
+    }
+
+    .cadastros-conteudo form {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cadastros-container {
+        padding: 20px 12px;
+    }
+
+    .cadastros-header h1 {
+        font-size: 24px;
+    }
+
+    .cadastros-conteudo {
+        padding: 14px;
+    }
+
+    .setor-item {
+        padding: 14px;
+    }
+}

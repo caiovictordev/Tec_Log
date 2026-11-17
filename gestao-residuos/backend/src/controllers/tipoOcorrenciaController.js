@@ -70,15 +70,20 @@ class TipoOcorrenciaController {
                 });
             }
 
-            const tipo = await TipoOcorrenciaModel.editar(
+            const atualizado = await TipoOcorrenciaModel.editar(
                 id,
                 nome.trim(),
                 descricao?.trim() || null
             );
 
+            if (!atualizado) {
+                return res.status(404).json({
+                    message: "Tipo de ocorrência não encontrado."
+                });
+            }
+
             return res.status(200).json({
-                message: "Tipo de ocorrência atualizado com sucesso!",
-                tipo
+                message: "Tipo de ocorrência atualizado com sucesso!"
             });
 
         } catch (error) {
