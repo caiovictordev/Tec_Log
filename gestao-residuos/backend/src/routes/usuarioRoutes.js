@@ -10,6 +10,7 @@ router.post("/", UsuarioController.cadastrar);
 router.post("/login", UsuarioController.login);
 router.get("/perfil", autenticar, UsuarioController.perfil);
 router.put( "/:id/perfil", autenticar, UsuarioController.alterarPerfil);
+router.delete("/:id", autenticar, UsuarioController.excluir);
 
 router.post( "/admin/cadastrar",autenticar, UsuarioController.cadastrarAdmin );
 

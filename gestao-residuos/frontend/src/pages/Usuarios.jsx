@@ -4,6 +4,8 @@ import api from "../services/api";
 
 import "./Usuarios.css";
 
+import Notificacao from "../components/Notificacao.jsx";
+
 function Usuarios() {
     const [usuarios, setUsuarios] = useState([]);
 
@@ -13,6 +15,7 @@ function Usuarios() {
     const [perfil, setPerfil] = useState("operador");
 
     const [mensagem, setMensagem] = useState("");
+    const [tipoMensagem, setTipoMensagem] = useState("sucesso");
     const [carregando, setCarregando] = useState(false);
 
     const usuarioLogado = JSON.parse(
@@ -27,13 +30,14 @@ function Usuarios() {
                     perfil: novoPerfil
                 }
             );
-
+            setTipoMensagem("sucesso");
             setMensagem(resposta.data.message);
 
             const atualizacao = await api.get("/usuarios");
             setUsuarios(atualizacao.data);
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Erro ao alterar perfil."
@@ -47,6 +51,7 @@ function Usuarios() {
                 const resposta = await api.get("/usuarios");
                 setUsuarios(resposta.data);
             } catch (error) {
+                setTipoMensagem("erro");
                 setMensagem(
                     error.response?.data?.message ||
                     "Erro ao carregar usuários."
@@ -73,7 +78,7 @@ function Usuarios() {
                     perfil
                 }
             );
-
+            setTipoMensagem("sucesso");
             setMensagem(resposta.data.message);
 
             setNome("");
@@ -85,6 +90,7 @@ function Usuarios() {
             setUsuarios(atualizacao.data);
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Erro ao cadastrar membro."
@@ -92,6 +98,33 @@ function Usuarios() {
         }
 
         setCarregando(false);
+    }
+
+    async function excluirUsuario(id) {
+        const confirmar = window.confirm(
+            "Tem certeza que deseja excluir este usuário?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        try {
+            const resposta = await api.delete(`/usuarios/${id}`);
+
+            setTipoMensagem("sucesso");
+            setMensagem(resposta.data.message);
+
+            const atualizacao = await api.get("/usuarios");
+            setUsuarios(atualizacao.data);
+
+        } catch (error) {
+            setTipoMensagem("erro");
+            setMensagem(
+                error.response?.data?.message ||
+                "Erro ao excluir usuário."
+            );
+        }
     }
 
     return (
@@ -156,7 +189,11 @@ function Usuarios() {
 
                 </form>
 
-                {mensagem && <p role="alert">{mensagem}</p>}
+                <Notificacao
+                    tipo={tipoMensagem}
+                    mensagem={mensagem}
+                    onFechar={() => setMensagem("")}
+                />
 
             </section>
 
@@ -188,6 +225,14 @@ function Usuarios() {
                                     <option value="operador">Operador</option>
                                     <option value="admin">Administrador</option>
                                 </select>
+
+                                <button
+                                    type="button"
+                                    disabled={Number(usuario.id) === Number(usuarioLogado.id)}
+                                    onClick={() => excluirUsuario(usuario.id)}
+                                >
+                                    Excluir
+                                </button>
                             </article>
                         ))
                     )}

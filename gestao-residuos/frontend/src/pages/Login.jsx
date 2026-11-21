@@ -1,6 +1,6 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Notificacao from "../components/Notificacao";
 import api from "../services/api";
 
 import "./Login.css";
@@ -16,6 +16,7 @@ function Login() {
     const [confirmarSenha, setConfirmarSenha] = useState("");
 
     const [mensagem, setMensagem] = useState("");
+    const [tipoMensagem, setTipoMensagem] = useState("sucesso");
     const [carregando, setCarregando] = useState(false);
 
     async function handleLogin(event) {
@@ -38,6 +39,7 @@ function Login() {
             navigate("/dashboard");
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Não foi possível realizar o login."
@@ -53,6 +55,7 @@ function Login() {
         setMensagem("");
 
         if (senha !== confirmarSenha) {
+            setTipoMensagem("erro");
             setMensagem("As senhas não coincidem.");
             return;
         }
@@ -74,6 +77,7 @@ function Login() {
             setConfirmarSenha("");
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Não foi possível cadastrar o usuário."
@@ -144,7 +148,11 @@ function Login() {
                             required
                         />
 
-                        {mensagem && <p role="alert">{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <button type="submit" disabled={carregando}>
                             {carregando ? "Entrando..." : "Entrar"}
@@ -198,7 +206,11 @@ function Login() {
                             required
                         />
 
-                        {mensagem && <p role="alert">{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <button type="submit" disabled={carregando}>
                             {carregando ? "Cadastrando..." : "Criar conta"}

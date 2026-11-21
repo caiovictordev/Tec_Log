@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import Notificacao from "../components/Notificacao";
 import "./Ocorrencia.css";
 
 function Ocorrencia() {
@@ -8,6 +9,7 @@ function Ocorrencia() {
 
     const [enviando, setEnviando] = useState(false);
     const [mensagem, setMensagem] = useState("");
+    const [tipoMensagem, setTipoMensagem] = useState("sucesso");
 
     const [setores, setSetores] = useState([]);
     const [maquinas, setMaquinas] = useState([]);
@@ -76,7 +78,7 @@ function Ocorrencia() {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+            setTipoMensagem("sucesso");
             setMensagem("Ocorrência registrada com sucesso!");
 
             setFormulario({
@@ -94,14 +96,15 @@ function Ocorrencia() {
             });
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Não foi possível registrar a ocorrência."
             );
         }
 
-    setEnviando(false);
-}
+        setEnviando(false);
+    }
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -136,6 +139,7 @@ function Ocorrencia() {
                 setDestinos(resDestinos.data);
 
             } catch (error) {
+                setTipoMensagem("erro");
                 console.error("Erro ao carregar dados:", error);
             }
 
@@ -145,7 +149,7 @@ function Ocorrencia() {
         carregarDados();
     }, []);
 
-    
+
     return (
         <main className="ocorrencia">
             <header className="ocorrencia-header">
@@ -230,11 +234,11 @@ function Ocorrencia() {
                                     </option>
                                 ))}
                             </select>
-    
+
                         </div>
                     </div>
                 </section>
-                
+
 
                 <section className="form-section">
                     <h2>Material e quantidade</h2>
@@ -340,17 +344,17 @@ function Ocorrencia() {
                     </div>
                 </section>
 
-                {mensagem && (
-                    <p className="form-message" role="status">
-                        {mensagem}
-                    </p>
-                )}
+                <Notificacao
+                    tipo={tipoMensagem}
+                    mensagem={mensagem}
+                    onFechar={() => setMensagem("")}
+                />
 
                 <button className="form-submit" type="submit" disabled={enviando || carregando}>
                     {carregando ? "Carregando dados..." : enviando ? "Registrando..." : "Registrar ocorrência"}
                 </button>
             </form>
-            
+
         </main>
     );
 

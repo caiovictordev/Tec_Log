@@ -258,6 +258,65 @@ class UsuarioController {
         });
     }
 
+    static async excluir(req, res) {
+        try {
+            if (req.usuario.perfil !== "admin") {
+                return res.status(403).json({
+                    message: "Acesso permitido apenas para administradores."
+                });
+            }
+
+            const { id } = req.params;
+
+            if (Number(id) === Number(req.usuario.id)) {
+                return res.status(400).json({
+                    message: "Você não pode excluir sua própria conta."
+                });
+            }
+            const usuario = await UsuarioModel.buscarPorId(id);
+
+            if (!usuario) {
+                return res.status(404).json({
+                    message: "Usuário não encontrado."
+                });
+            }
+
+            if (usuario.perfil === "admin") {
+                const totalAdmins = await UsuarioModel.contarAdmins();
+
+                if (totalAdmins <= 1) {
+                    return res.status(400).json({
+                        message: "Não é possível excluir o último administrador."
+                    });
+                }
+            }
+
+            const excluido = await UsuarioModel.excluir(id);
+
+            if (!excluido) {
+                return res.status(404).json({
+                    message: "Usuário não encontrado."
+                });
+            }
+
+            return res.status(200).json({
+                message: "Usuário excluído com sucesso!"
+            });
+
+        } catch (error) {
+            console.error(error);
+
+            if (error.code === "ER_ROW_IS_REFERENCED_2") {
+                return res.status(409).json({
+                    message: "Não é possível excluir este usuário, pois ele possui ocorrências registradas no sistema."
+                });
+            }
+
+            return res.status(500).json({
+                message: "Erro ao excluir usuário."
+            });
+        }
+    }
 }
 
 export default UsuarioController;

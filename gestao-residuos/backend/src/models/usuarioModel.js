@@ -60,4 +60,23 @@ async function contarAdmins() {
 
     return dados[0].total;
 }
-export default { listar, buscarPorEmail, cadastrar, alterarPerfil, contarAdmins };
+
+async function excluir(id) {
+    const [dados] = await conect.execute(
+        `DELETE FROM usuarios
+         WHERE id = ?`,
+        [id]
+    );
+
+    return dados.affectedRows > 0;
+}
+
+async function buscarPorId(id) {
+    const [dados] = await conect.execute(
+        "SELECT id, nome, email, perfil FROM usuarios WHERE id = ?",
+        [id]
+    );
+
+    return dados[0];
+}
+export default { listar, buscarPorEmail, cadastrar, alterarPerfil, contarAdmins, excluir, buscarPorId };

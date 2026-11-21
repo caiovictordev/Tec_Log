@@ -187,29 +187,9 @@
     color: white;
 }
 
-@media (max-width: 600px) {
-    .cadastros-container {
-        padding: 16px;
-    }
-
-    .cadastros-abas {
-        gap: 4px;
-    }
-
-    .cadastros-abas .aba {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
-
-    .cadastros-conteudo {
-        padding: 18px;
-    }
-}
-
-/* Responsividade */
 @media (max-width: 768px) {
     .cadastros-container {
-        padding: 30px 20px;
+        padding: 85px 20px 40px;
     }
 
     .cadastros-conteudo {
@@ -242,7 +222,7 @@
 
 @media (max-width: 480px) {
     .cadastros-container {
-        padding: 20px 12px;
+        padding: 85px 12px 30px;
     }
 
     .cadastros-header h1 {

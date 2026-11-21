@@ -373,6 +373,10 @@
 }
 
 @media (max-width: 600px) {
+    .lista-ocorrencias {
+        padding: 85px 16px 30px;
+    }
+
     .lista-header button {
         width: 100%;
     }
@@ -383,6 +387,7 @@
 
     .filtros {
         padding: 16px;
+        grid-template-columns: 1fr;
     }
 
     .tabela-container table {
@@ -406,19 +411,9 @@
     .detalhe-observacao {
         grid-column: auto;
     }
-    .lista-ocorrencias {
-        padding: 24px 16px;
-    }
 
     .lista-header {
         align-items: flex-start;
         flex-direction: column;
     }
-
-    .filtros {
-        grid-template-columns: 1fr;
-    }
 }
-
-
-

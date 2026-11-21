@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import Notificacao from "../components/Notificacao";
 import "./Cadastros.css";
 
 function Cadastros() {
@@ -11,6 +12,7 @@ function Cadastros() {
     const [descricao, setDescricao] = useState("");
     const [mensagem, setMensagem] = useState("");
     const [carregando, setCarregando] = useState(false);
+    const [tipoMensagem, setTipoMensagem] = useState("sucesso");
     const [setorEditando, setSetorEditando] = useState(null);
 
     const [maquinas, setMaquinas] = useState([]);
@@ -76,6 +78,7 @@ function Cadastros() {
             const resposta = await api.get("/tipos-ocorrencia");
             setTipos(resposta.data);
         } catch (error) {
+            setTipoMensagem("erro");
             console.error(error);
             setMensagem("Erro ao carregar tipos de ocorrência.");
         }
@@ -86,6 +89,7 @@ function Cadastros() {
             const resposta = await api.get("/destinos-residuos");
             setDestinos(resposta.data);
         } catch (error) {
+            setTipoMensagem("erro");
             console.error(error);
             setMensagem("Erro ao carregar destinos.");
         }
@@ -102,9 +106,11 @@ function Cadastros() {
 
             if (destinoEditando) {
                 await api.put(`/destinos-residuos/${destinoEditando}`, dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Destino atualizado com sucesso!");
             } else {
                 await api.post("/destinos-residuos", dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Destino cadastrado com sucesso!");
             }
 
@@ -114,6 +120,7 @@ function Cadastros() {
 
             listarDestinos();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao salvar destino."
             );
@@ -137,10 +144,12 @@ function Cadastros() {
         try {
             await api.delete(`/destinos-residuos/${id}`);
 
+            setTipoMensagem("sucesso");
             setMensagem("Destino excluído com sucesso!");
 
             listarDestinos();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao excluir destino."
             );
@@ -158,9 +167,11 @@ function Cadastros() {
 
             if (tipoEditando) {
                 await api.put(`/tipos-ocorrencia/${tipoEditando}`, dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Tipo de ocorrência atualizado com sucesso!");
             } else {
                 await api.post("/tipos-ocorrencia", dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Tipo de ocorrência cadastrado com sucesso!");
             }
 
@@ -170,6 +181,7 @@ function Cadastros() {
 
             listarTipos();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao salvar tipo de ocorrência."
             );
@@ -193,10 +205,12 @@ function Cadastros() {
         try {
             await api.delete(`/tipos-ocorrencia/${id}`);
 
+            setTipoMensagem("sucesso");
             setMensagem("Tipo de ocorrência excluído com sucesso!");
 
             listarTipos();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message ||
                 "Erro ao excluir tipo de ocorrência."
@@ -216,9 +230,11 @@ function Cadastros() {
 
             if (materialEditando) {
                 await api.put(`/materiais/${materialEditando}`, dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Material atualizado com sucesso!");
             } else {
                 await api.post("/materiais", dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Material cadastrado com sucesso!");
             }
 
@@ -229,6 +245,7 @@ function Cadastros() {
 
             listarMateriais();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao salvar material."
             );
@@ -252,11 +269,12 @@ function Cadastros() {
 
         try {
             await api.delete(`/materiais/${id}`);
-
+            setTipoMensagem("sucesso");
             setMensagem("Material excluído com sucesso!");
 
             listarMateriais();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao excluir material."
             );
@@ -274,9 +292,11 @@ function Cadastros() {
 
             if (maquinaEditando) {
                 await api.put(`/maquinas/${maquinaEditando}`, dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Máquina atualizada com sucesso!");
             } else {
                 await api.post("/maquinas", dados);
+                setTipoMensagem("sucesso");
                 setMensagem("Máquina cadastrada com sucesso!");
             }
 
@@ -286,6 +306,7 @@ function Cadastros() {
 
             listarMaquinas();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao salvar máquina."
             );
@@ -308,11 +329,12 @@ function Cadastros() {
 
         try {
             await api.delete(`/maquinas/${id}`);
-
+            setTipoMensagem("sucesso");
             setMensagem("Máquina excluída com sucesso!");
 
             listarMaquinas();
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao excluir máquina."
             );
@@ -328,14 +350,14 @@ function Cadastros() {
                     nome,
                     descricao
                 });
-
+                setTipoMensagem("sucesso");
                 setMensagem("Setor atualizado com sucesso!");
             } else {
                 await api.post("/setores", {
                     nome,
                     descricao
                 });
-
+                setTipoMensagem("sucesso");
                 setMensagem("Setor cadastrado com sucesso!");
             }
 
@@ -347,6 +369,7 @@ function Cadastros() {
 
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao salvar setor."
             );
@@ -362,12 +385,13 @@ function Cadastros() {
 
         try {
             await api.delete(`/setores/${id}`);
-
+            setTipoMensagem("sucesso");
             setMensagem("Setor excluído com sucesso!");
 
             listarSetores();
 
         } catch (error) {
+            setTipoMensagem("erro");
             setMensagem(
                 error.response?.data?.message || "Erro ao excluir setor."
             );
@@ -382,9 +406,11 @@ function Cadastros() {
     }
 
     useEffect(() => {
+        if (abaAtiva === "setores") {
+            listarSetores();
+        }
         if (abaAtiva === "maquinas") {
             listarMaquinas();
-            listarSetores();
         }
 
         if (abaAtiva === "materiais") {
@@ -451,7 +477,11 @@ function Cadastros() {
 
                         </form>
 
-                        {mensagem && <p>{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <h3>Setores cadastrados</h3>
 
@@ -521,7 +551,11 @@ function Cadastros() {
                             </button>
                         </form>
 
-                        {mensagem && <p>{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <h3>Máquinas cadastradas</h3>
 
@@ -590,8 +624,11 @@ function Cadastros() {
                                 {materialEditando ? "Salvar alterações" : "Cadastrar material"}
                             </button>
                         </form>
-
-                        {mensagem && <p>{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <h3>Materiais cadastrados</h3>
 
@@ -655,7 +692,11 @@ function Cadastros() {
                             </button>
                         </form>
 
-                        {mensagem && <p>{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <h3>Tipos cadastrados</h3>
 
@@ -716,7 +757,11 @@ function Cadastros() {
                             </button>
                         </form>
 
-                        {mensagem && <p>{mensagem}</p>}
+                        <Notificacao
+                            tipo={tipoMensagem}
+                            mensagem={mensagem}
+                            onFechar={() => setMensagem("")}
+                        />
 
                         <h3>Destinos cadastrados</h3>
 
